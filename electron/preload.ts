@@ -15,6 +15,7 @@ import type {
   StartMonitoringResult,
   TermsStatusResult,
   TermsTextResult,
+  TodayMonitoringResult,
 } from './ipcChannels';
 
 const hrms: HrmsBridge = {
@@ -51,6 +52,9 @@ const hrms: HrmsBridge = {
 
   getTodaySummary: (date?: string): Promise<AppSummaryResult> =>
     ipcRenderer.invoke(IpcInvoke.GetTodaySummary, date),
+
+  getTodayMonitoring: (): Promise<TodayMonitoringResult | null> =>
+    ipcRenderer.invoke(IpcInvoke.GetTodayMonitoring),
 
   quitApp: (): Promise<void> => ipcRenderer.invoke(IpcInvoke.QuitApp),
 

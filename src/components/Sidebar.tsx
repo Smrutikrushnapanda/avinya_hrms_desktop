@@ -59,9 +59,11 @@ export default function Sidebar({ active, onNavigate }: Props) {
   return (
     <aside className="bg-card flex h-full w-64 shrink-0 flex-col border-r">
       <div className="flex items-center gap-2.5 px-5 py-5">
-        <div className="flex size-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#184a8c] to-[#00b4db] text-sm font-bold text-white">
-          A
-        </div>
+        <img
+          src="/App-logo.png"
+          alt="Avinya HRMS logo"
+          className="size-9 flex-shrink-0 rounded-lg object-contain"
+        />
         <div>
           <div className="text-sm leading-none font-semibold">Avinya</div>
           <div className="text-muted-foreground text-xs">WFH Monitor</div>

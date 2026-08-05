@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { Clock, Coffee, Keyboard, Mouse, TrendingUp, Utensils } from 'lucide-react';
+import { Clock, Coffee, Keyboard, Mouse, TrendingUp, Utensils, PlayCircle } from 'lucide-react';
 import { useMonitorStore } from '../stores/monitorStore';
 import * as api from '../services/api';
 import { Button } from '../components/ui/button';
@@ -79,8 +80,17 @@ function StatCard({
   );
 }
 
+const WFH_STATUS_POLL_MS = 5 * 60_000; // re-check approval/session state every 5 min
+
 export default function Dashboard() {
   const monitor = useMonitorStore();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void useMonitorStore.getState().refreshWfhApprovalStatus();
+    }, WFH_STATUS_POLL_MS);
+    return () => clearInterval(interval);
+  }, []);
 
   const totalActiveSeconds = monitor.todaySummary?.totals.durationSeconds ?? 0;
   const totalKeystrokes = monitor.todaySummary?.totals.keystrokes ?? 0;
@@ -140,6 +150,25 @@ export default function Dashboard() {
             onClick={() => api.openPermissionSettings('accessibility')}
           >
             Open Settings
+          </Button>
+        </div>
+      )}
+
+      {monitor.hasApprovedWfhToday && !monitor.isMonitoring && (
+        <div className="border-primary/40 bg-primary/10 text-primary flex items-center justify-between gap-3 rounded-lg border p-3 text-xs leading-relaxed">
+          <span className="flex items-center gap-2">
+            <PlayCircle className="size-4" />
+            <strong>You have approved WFH today</strong> — click Start to begin tracking
+            your session. Your attendance for today depends on it.
+          </span>
+          <Button
+            size="sm"
+            variant="default"
+            className="shrink-0"
+            onClick={() => monitor.start()}
+            disabled={monitor.starting}
+          >
+            {monitor.starting ? 'Starting…' : 'Start Monitoring'}
           </Button>
         </div>
       )}

@@ -6,10 +6,14 @@ directories:
 files:
   - out/**/*
   - package.json
+extraResources:
+  - from: resources/App-logo.png
+    to: App-logo.png
 asarUnpack:
   - '**/node_modules/uiohook-napi/**'
   - '**/node_modules/get-windows/**'
 mac:
+  icon: build/icon.png
   target:
     - target: dmg
       arch:
@@ -21,11 +25,13 @@ mac:
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
 win:
+  icon: build/icon.ico
   target:
     - target: nsis
       arch:
         - x64
 linux:
+  icon: build/icon.png
   target:
     - target: AppImage
       arch:

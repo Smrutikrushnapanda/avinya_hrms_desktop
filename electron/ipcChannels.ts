@@ -15,6 +15,7 @@ export const IpcInvoke = {
   ToggleLunch: 'hrms:toggleLunch',
   GetMonitoringState: 'hrms:getMonitoringState',
   GetTodaySummary: 'hrms:getTodaySummary',
+  GetTodayMonitoring: 'hrms:getTodayMonitoring',
   QuitApp: 'hrms:quitApp',
 } as const;
 
@@ -128,6 +129,11 @@ export interface AppSummaryResult {
   totals: { keystrokes: number; clicks: number; durationSeconds: number };
 }
 
+export interface TodayMonitoringResult {
+  hasApprovedWfh: boolean;
+  isWorking: boolean;
+}
+
 /**
  * The window.hrms surface exposed by preload.ts via contextBridge. Defined
  * here (not derived from preload.ts) so renderer code can import the type
@@ -147,6 +153,7 @@ export interface HrmsBridge {
   toggleLunch(): Promise<LunchState>;
   getMonitoringState(): Promise<MonitoringState>;
   getTodaySummary(date?: string): Promise<AppSummaryResult>;
+  getTodayMonitoring(): Promise<TodayMonitoringResult | null>;
   quitApp(): Promise<void>;
   onMonitoringTick(cb: (payload: MonitoringTickPayload) => void): () => void;
   onMonitoringFlush(cb: (payload: MonitoringFlushPayload) => void): () => void;

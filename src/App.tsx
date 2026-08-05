@@ -61,16 +61,24 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-7">
-      {screen === 'loading' && <p className="text-muted-foreground text-sm">Loading…</p>}
+    <div className="flex h-screen w-full items-center justify-center overflow-hidden bg-background">
+      {screen === 'loading' && (
+        <p className="text-muted-foreground p-7 text-sm">Loading…</p>
+      )}
       {screen === 'login' && <Login />}
-      {screen === 'terms' && <Terms onAccepted={() => setTermsUpToDate(true)} />}
+      {screen === 'terms' && (
+        <div className="flex w-full items-center justify-center p-7">
+          <Terms onAccepted={() => setTermsUpToDate(true)} />
+        </div>
+      )}
       {screen === 'permissions' && (
-        <PermissionsOnboarding
-          permissions={permissions!}
-          onRefresh={async () => setPermissions(await api.checkPermissions())}
-          onContinue={() => setPermissionsDismissed(true)}
-        />
+        <div className="flex w-full items-center justify-center p-7">
+          <PermissionsOnboarding
+            permissions={permissions!}
+            onRefresh={async () => setPermissions(await api.checkPermissions())}
+            onContinue={() => setPermissionsDismissed(true)}
+          />
+        </div>
       )}
     </div>
   );

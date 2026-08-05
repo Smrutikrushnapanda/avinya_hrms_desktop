@@ -17,6 +17,10 @@ const isDev = !app.isPackaged;
 let mainWindow: BrowserWindow | null = null;
 let isQuitting = false;
 
+const windowIconPath = app.isPackaged
+  ? join(process.resourcesPath, 'App-logo.png')
+  : join(app.getAppPath(), 'resources', 'App-logo.png');
+
 function toAuthUser(rawUser: Record<string, unknown>): AuthUser {
   return {
     userId: rawUser.id as string,
@@ -66,6 +70,7 @@ function createWindow(): void {
     minWidth: 1000,
     minHeight: 640,
     title: 'Avinya HRMS Monitor',
+    icon: windowIconPath,
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
@@ -199,12 +204,30 @@ function registerIpcHandlers(): void {
     }
   });
 
+  ipcMain.handle(IpcInvoke.GetTodayMonitoring, async () => {
+    try {
+      const { data } = await api.get('/wfh-monitoring/today');
+      return {
+        hasApprovedWfh: Boolean(data?.hasApprovedWfh),
+        isWorking: Boolean(data?.isWorking),
+      };
+    } catch {
+      return null;
+    }
+  });
+
   ipcMain.handle(IpcInvoke.QuitApp, () => {
     app.quit();
   });
 }
 
 app.whenReady().then(() => {
+  // Dev mode runs inside the generic "Electron" bundle; stamp the Dock icon
+  // manually so the logo shows even before the app is packaged with a real icon.
+  if (process.platform === 'darwin') {
+    app.dock?.setIcon(windowIconPath);
+  }
+
   registerIpcHandlers();
   createWindow();
 

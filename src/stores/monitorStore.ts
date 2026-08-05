@@ -37,6 +37,9 @@ interface MonitorStoreState {
   startError: string | null;
   todaySummary: AppSummaryResult | null;
   yesterdaySummary: AppSummaryResult | null;
+  /** Whether today's WFH is approved and whether a session has been started —
+   *  drives the "Start Monitoring" reminder banner. */
+  hasApprovedWfhToday: boolean;
   /** internal — last tick's combined keystroke+click count, used to derive per-tick deltas */
   _prevTickTotal: number;
   /** internal — calendar date (local) as of the last flush/sync, used to detect midnight rollover */
@@ -48,6 +51,7 @@ interface MonitorStoreState {
   toggleLunch: () => Promise<LunchState>;
   refreshTodaySummary: () => Promise<void>;
   refreshYesterdaySummary: () => Promise<void>;
+  refreshWfhApprovalStatus: () => Promise<void>;
   syncMonitoringState: () => Promise<void>;
   checkDayRollover: () => Promise<void>;
 }
@@ -77,6 +81,7 @@ export const useMonitorStore = create<MonitorStoreState>((set, get) => ({
   startError: null,
   todaySummary: null,
   yesterdaySummary: null,
+  hasApprovedWfhToday: false,
   _prevTickTotal: 0,
   _lastKnownDate: todayIsoDate(),
 
@@ -119,7 +124,11 @@ export const useMonitorStore = create<MonitorStoreState>((set, get) => ({
 
     await get().syncMonitoringState();
     set({ initialized: true });
-    await Promise.all([get().refreshTodaySummary(), get().refreshYesterdaySummary()]);
+    await Promise.all([
+      get().refreshTodaySummary(),
+      get().refreshYesterdaySummary(),
+      get().refreshWfhApprovalStatus(),
+    ]);
   },
 
   start: async () => {
@@ -186,6 +195,15 @@ export const useMonitorStore = create<MonitorStoreState>((set, get) => ({
     }
   },
 
+  refreshWfhApprovalStatus: async () => {
+    try {
+      const result = await api.getTodayMonitoring();
+      set({ hasApprovedWfhToday: Boolean(result?.hasApprovedWfh) });
+    } catch {
+      // backend unreachable — keep previous value
+    }
+  },
+
   syncMonitoringState: async () => {
     const state = await api.getMonitoringState();
     set({
@@ -215,6 +233,10 @@ export const useMonitorStore = create<MonitorStoreState>((set, get) => ({
     const today = todayIsoDate();
     if (get()._lastKnownDate === today) return;
     set({ _lastKnownDate: today, activityBuffer: [], _prevTickTotal: 0 });
-    await Promise.all([get().refreshTodaySummary(), get().refreshYesterdaySummary()]);
+    await Promise.all([
+      get().refreshTodaySummary(),
+      get().refreshYesterdaySummary(),
+      get().refreshWfhApprovalStatus(),
+    ]);
   },
 }));

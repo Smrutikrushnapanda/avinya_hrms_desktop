@@ -32,6 +32,8 @@ export const getMonitoringState = () => window.hrms.getMonitoringState();
 
 export const getTodaySummary = (date?: string) => window.hrms.getTodaySummary(date);
 
+export const getTodayMonitoring = () => window.hrms.getTodayMonitoring();
+
 export const quitApp = () => window.hrms.quitApp();
 
 export const onMonitoringTick = (...args: Parameters<typeof window.hrms.onMonitoringTick>) =>
