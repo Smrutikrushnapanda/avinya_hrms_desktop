@@ -51,7 +51,7 @@ export default function Login() {
         <div className="flex flex-col gap-5 border-b border-slate-100 p-7 pb-5 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <img
-              src="/App-logo.png"
+              src="./App-logo.png"
               alt="Avinya HRMS logo"
               className="h-11 w-11 flex-shrink-0 rounded-xl object-contain shadow-lg shadow-blue-900/30"
             />

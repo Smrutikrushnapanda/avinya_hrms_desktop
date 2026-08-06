@@ -60,7 +60,7 @@ export default function Sidebar({ active, onNavigate }: Props) {
     <aside className="bg-card flex h-full w-64 shrink-0 flex-col border-r">
       <div className="flex items-center gap-2.5 px-5 py-5">
         <img
-          src="/App-logo.png"
+          src="./App-logo.png"
           alt="Avinya HRMS logo"
           className="size-9 flex-shrink-0 rounded-lg object-contain"
         />
