@@ -66,6 +66,31 @@ npm install
 npm run make
 ```
 
+## Installing the app (no Apple Developer account)
+
+The installers are unsigned, so macOS/Windows show a one-time warning. That's
+expected — no Apple Developer account or paid certificate is required.
+
+### macOS
+
+1. Download the `.dmg` (choose `-arm64` on Apple Silicon, plain on Intel).
+2. Open it and drag **Avinya HRMS Monitor** into the Applications folder.
+3. Run the fix script (download it from the Release page or use this repo's):
+
+   ```bash
+   curl -L -o fix-macos.sh https://github.com/Smrutikrushnapanda/avinya_hrms_desktop/releases/latest/download/fix-macos.sh
+   chmod +x fix-macos.sh
+   ./fix-macos.sh
+   ```
+
+   That strips the quarantine flag and applies a local signature so macOS
+   stops complaining, then launches the app.
+
+### Windows
+
+Run the `Setup` exe, then on the SmartScreen prompt click **More info** →
+**Run anyway**. That's it.
+
 ## Notes
 
 - Installers are unsigned: macOS shows "unidentified developer"

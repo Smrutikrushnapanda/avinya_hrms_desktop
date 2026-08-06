@@ -1,6 +1,6 @@
 {
   "name": "hrms-desktop-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Avinya HRMS Desktop — WFH activity monitoring client",
   "main": "./out/main/main.js",
   "private": true,

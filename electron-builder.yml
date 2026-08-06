@@ -12,6 +12,7 @@ extraResources:
 asarUnpack:
   - '**/node_modules/uiohook-napi/**'
   - '**/node_modules/get-windows/**'
+afterPack: scripts/afterPack.js
 mac:
   icon: build/icon.png
   target:
